@@ -48,7 +48,7 @@ fn test_looping() {
     input.append('a');
     input.append('i');
     input.append('n');
-    input.append(0); // EOL
+    input.append(0); // EOLgit
 
     let result = program.execute(input);
     let result_string = array_u8_to_string(result);

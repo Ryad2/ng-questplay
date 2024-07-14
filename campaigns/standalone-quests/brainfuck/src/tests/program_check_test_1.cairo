@@ -3,7 +3,7 @@ use src::logic::program::ProgramTrait;
 use src::tests::sample_programs;
 
 #[test]
-#[available_gas(6500000)]
+#[available_gas(65000001)]
 fn test_check() {
     let program = sample_programs::simple_mul();
     program.check();

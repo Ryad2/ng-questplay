@@ -1,5 +1,8 @@
+use core::traits::Into;
+use core::option::OptionTrait;
 use core::traits::TryInto;
 use core::array::ArrayTrait;
+use src::logic::utils::felt252_to_string;
 
 trait ProgramTrait {
     fn check(self: @Array<felt252>);
@@ -10,39 +13,44 @@ trait ProgramTrait {
 impl Program of ProgramTrait {
 
     fn check(self: @Array<felt252>) {
-        // Vérifier les caractères non autorisés et l'équilibrage des crochets
-        let mut balance = 0;
-        let mut index = 0;
-        loop {
-            let c : u32 = self.get(index).try_into();
-            if c == 43 || c == 45 || c == 62 || c == 60 || c == 46 || c == 44 || c == 91 {
 
-            } 
-            match c {
-                '+' => {},  // '+'
-                45 => {},  // '-'
-                62 => {},  // '>'
-                60 => {},  // '<'
-                46 => {},  // '.'
-                44 => {},  // ','
-                91 => {    // 
-                    balance += 1;
-                },
-                93 => {    // 
-                    balance -= 1;
-                    if balance < 0 {
-                        panic!("Unmatched closing bracket");
-                    }
-                },
-                _ => {
-                    panic!("Invalid character in program");
+        // Vérifier les caractères non autorisés et l'équilibrage des crochets
+        let mut balance : u32 = 0;
+        let mut index = 0;
+        let char0 : u8 = '+';
+        let char1 : u8 = '-';
+        let char2 : u8 = '>';
+        let char3 : u8 = '<';
+        let char4 : u8 = '.';
+        let char5 : u8 = ',';
+        let char6 : u8 = '[';
+        let char7 : u8 = ']';
+        let string : Array<u8>  = felt252_to_string(self);
+
+
+        loop {
+            let c : u8 = *string[index];
+            if c == char0 || c == char1 || c == char2 || c == char3 || 
+                c == char4 || c == char5 {
+                } 
+            else if c == char6 {
+                balance = balance + 1;
+            }
+            else if c == char7 {
+                balance -= 1;
+                if balance < 0 {
+                    panic!("Unmatched closing bracket");
                 }
             }
-            index += 1;
-            if index == self.len() {
+            else {
+                panic!("Invalid character in program");
+            }
+            index = index + 1;
+            if index == string.len() {
                 break;
             }
-        }
+        };
+
         if balance != 0 {
             panic!("Unmatched opening bracket");
         }
@@ -50,14 +58,42 @@ impl Program of ProgramTrait {
 
 
 
-
-
-
-
     fn execute(self: @Array<felt252>, input: Array<u8>) -> Array<u8> {
         // Initialisation de la mémoire
-        let returnal : Array<u8>  = array![0];
-        return returnal;
+        let insctructions : Array<u8>  = felt252_to_string(self);
+        let mut index  = 0;
+        let mut pointer : u32 = 0;
+        let mut output : Array<u8> = input;
+        *output[0] = 0;      
+
+        loop {
+            let instruction : u8 = *insctructions[index];
+
+            if instruction == '+' {
+              output.at(pointer) = 1;
+            }
+            else if instruction == '-' {
+                output[pointer] -= 1;
+            }
+            else if instruction == '>' {
+                pointer += 1;
+            }
+            else if instruction == '<' {
+                pointer -= 1;
+            }
+            else if instruction == '.' {
+                let char : u8 = input[pointer];
+                let mut output = ArrayTrait::new();
+                output.append(char);
+            }
+
+
+
+            else if instruction == ',' {
+            if index == insctructions.len() {
+                break;
+            }
+        };
     }
 
 }
