@@ -3,6 +3,8 @@ use core::option::OptionTrait;
 use core::traits::TryInto;
 use core::array::ArrayTrait;
 use src::logic::utils::felt252_to_string;
+use  starknet::storage_access;
+use core::dict::Felt252DictTrait;
 
 trait ProgramTrait {
     fn check(self: @Array<felt252>);
@@ -59,21 +61,34 @@ impl Program of ProgramTrait {
 
 
     fn execute(self: @Array<felt252>, input: Array<u8>) -> Array<u8> {
+
         // Initialisation de la mémoire
         let insctructions : Array<u8>  = felt252_to_string(self);
-        let mut index  = 0;
-        let mut pointer : u32 = 0;
-        let mut output : Array<u8> = input;
-        *output[0] = 0;      
+        let mut memory : Felt252Dict<u8> = Default::default();
+        let mut output : Array<u8> = ArrayTrait::new();
+        let mut input : Array<u8> = input;
 
+        let mut index = 0;
+        loop {
+            
+            memory.insert(index, 0);
+            index += 1;
+            if index == 256 {
+                break;
+            }
+        };
+
+        let mut index = 0;
+        let mut pointer  = 0;
+        
         loop {
             let instruction : u8 = *insctructions[index];
 
             if instruction == '+' {
-              output.at(pointer) = 1;
+              memory.insert(pointer, memory.get(pointer) + 1);
             }
             else if instruction == '-' {
-                output[pointer] -= 1;
+                memory.insert(pointer, memory.get(pointer) - 1);
             }
             else if instruction == '>' {
                 pointer += 1;
@@ -82,18 +97,69 @@ impl Program of ProgramTrait {
                 pointer -= 1;
             }
             else if instruction == '.' {
-                let char : u8 = input[pointer];
-                let mut output = ArrayTrait::new();
+                let char : u8 = memory.get(pointer);
                 output.append(char);
             }
 
 
-
             else if instruction == ',' {
-            if index == insctructions.len() {
+                let char : u8 = input.pop_front().unwrap();
+                memory.insert(pointer, char);
+            }
+
+
+            else if instruction == '[' {
+                if memory.get(pointer) == 0 {
+                    let mut balance : u32 = 1;
+                    loop {
+                        index += 1;
+                        let instruction : u8 = *insctructions[index];
+                        if instruction == '[' {
+                            balance += 1;
+                        }
+                        else if instruction == ']' {
+                            balance -= 1;
+                            if balance == 0 {
+                                break;
+                            }
+                        }
+                    };
+                
+                }
+
+            }
+
+
+            else if instruction == ']' {
+                if memory.get(pointer) != 0 {
+                    let mut balance : u32 = 1;
+                    loop {
+                        index -= 1;
+                        let instruction : u8 = *insctructions[index];
+                        if instruction == ']' {
+                            balance += 1;
+                        }
+                        else if instruction == '[' {
+                            balance -= 1;
+                            if balance == 0 {
+                                break;
+                            }
+                        }
+                    };
+                
+                }
+            }
+            else {
+                panic!("Invalid character in program");
+            }
+            //end of reading insctructions
+            index += 1;
+            if index == 100 {//change to insctructions.len() when it works
                 break;
             }
         };
+
+        output
     }
 
 }
