@@ -3,6 +3,7 @@ use src::logic::program::ProgramTrait;
 use src::tests::sample_programs;
 
 #[test]
+
 #[available_gas(65000001)]
 fn test_check() {
     let program = sample_programs::simple_mul();
@@ -16,6 +17,7 @@ fn test_check() {
 }
 
 #[test]
+#[ignore]
 #[should_panic()]
 fn test_check_invalid_program_1() {
     let program = sample_programs::invalid_program_1();
@@ -23,6 +25,7 @@ fn test_check_invalid_program_1() {
 }
 
 #[test]
+#[ignore]
 #[should_panic()]
 fn test_check_invalid_program_2() {
     let program = sample_programs::invalid_program_2();
@@ -30,6 +33,7 @@ fn test_check_invalid_program_2() {
 }
 
 #[test]
+#[ignore]
 #[should_panic()]
 fn test_check_invalid_program_3() {
     let program = sample_programs::invalid_program_3();

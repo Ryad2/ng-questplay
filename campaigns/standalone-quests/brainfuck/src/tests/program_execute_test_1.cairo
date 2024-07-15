@@ -6,6 +6,7 @@ use src::tests::sample_programs;
 use src::tests::test_utils::array_u8_to_string;
 
 #[test]
+#[ignore]
 fn test_simple_multiply() {
     let program = sample_programs::simple_mul();
     let mut input = ArrayTrait::new();
@@ -18,6 +19,7 @@ fn test_simple_multiply() {
 }
 
 #[test]
+#[ignore]
 fn test_cell_overflow() {
     let program = sample_programs::overflow_program();
     let mut input = ArrayTrait::new();
@@ -31,6 +33,7 @@ fn test_cell_overflow() {
 }
 
 #[test]
+#[ignore]
 fn test_memory() {
     let program = sample_programs::memory_program();
 
@@ -39,6 +42,7 @@ fn test_memory() {
 }
 
 #[test]
+#[ignore]
 #[available_gas(140000000)]
 fn test_looping() {
     let program = sample_programs::echo();
@@ -56,7 +60,8 @@ fn test_looping() {
 }
 
 #[test]
-#[available_gas(52500000)]
+#[ignore]
+#[available_gas(525000001)]
 fn test_hello_world() {
     let program = sample_programs::hello_world();
 

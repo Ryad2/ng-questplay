@@ -8,7 +8,6 @@ use starknet::storage_access::StorePacking;
 fn felt252_to_string(input : @Array<felt252>) -> Array<u8> {
     
     let mut output = ArrayTrait::new();
-    
     let mut index = 0;
     loop {
         let mut c : felt252 = *input[index];
@@ -23,7 +22,6 @@ fn felt252_to_string(input : @Array<felt252>) -> Array<u8> {
             c /= 256;
         };
 
-        
         let mut len = temp.len();
 
         loop {
