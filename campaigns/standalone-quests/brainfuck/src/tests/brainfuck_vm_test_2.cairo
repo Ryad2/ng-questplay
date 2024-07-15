@@ -9,6 +9,8 @@ use src::tests::test_utils::{
     deploy_brainfuck_vm
 };
 
+
+
 #[test]
 #[available_gas(6000000)]
 fn test_deploy() {

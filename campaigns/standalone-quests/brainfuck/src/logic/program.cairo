@@ -33,8 +33,7 @@ impl Program of ProgramTrait {
         loop {
             let c : u8 = *string[index];
             if c == char0 || c == char1 || c == char2 || c == char3 || 
-                c == char4 || c == char5 {
-                } 
+                c == char4 || c == char5 {} 
             else if c == char6 {
                 balance = balance + 1;
             }

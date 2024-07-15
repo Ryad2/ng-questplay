@@ -34,8 +34,6 @@ fn felt252_to_string(input : @Array<felt252>) -> Array<u8> {
         };
 
 
-
-
         index += 1;
         if index == input.len() {
             break;
